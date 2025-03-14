@@ -1,44 +1,44 @@
-from sqlalchemy import Column, Integer, String, Enum
+from sqlalchemy import Column, String, Integer, Enum, ForeignKey, Time, BIGINT
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
 class Aula(Base):
-    __tablename__ = "aula"
+    __tablename__ = 'Aula'
 
-    _id = Column(Integer, primary_key=True, autoincrement=True)
-    _numero_aula = Column(String(10), nullable=False)
-    _situacion = Column(Enum('DISPONIBLE', 'OCUPADA', 'EN MANTENIMIENTO'), default='DISPONIBLE', nullable=False)
-    _planta = Column(Enum('1', '2', '3', '4', '5'), default='1', nullable=False)
+    id = Column(BIGINT, primary_key=True, autoincrement=True)
+    numero = Column(String(10), nullable=False, unique=True)
+    planta = Column(Integer, nullable=False, default=1)
+    situacion = Column(Enum('DISPONIBLE', 'OCUPADA', 'EN MANTENIMIENTO'), nullable=False, default='DISPONIBLE')
 
-    def __init__(self, numero_aula, situacion='DISPONIBLE', planta='1'):
-        self.set_numero_aula(numero_aula)
-        self.set_situacion(situacion)
+    def __init__(self, numero, planta, situacion):
+        self.set_numero(numero)
         self.set_planta(planta)
+        self.set_situacion(situacion)
 
-    def get_id(self):
-        return self._id
-
-    def get_numero_aula(self):
-        return self._numero_aula
-
-    def set_numero_aula(self, numero_aula):
-        if len(numero_aula) < 3 or len(numero_aula) > 20:
-            raise ValueError("El número de aula debe tener entre 3 y 20 caracteres")
-        self._numero_aula = numero_aula
+    # Métodos GET
+    def get_numero(self):
+        return self.__numero
+    
+    def get_planta(self):
+        return self.__planta
 
     def get_situacion(self):
-        return self._situacion
+        return self.__situacion
+
+    # Métodos SET con validaciones
+    def set_numero(self, numero):
+        if not numero or len(numero) < 3 or len(numero) > 20:
+            raise ValueError("El número del aula debe tener entre 3 y 20 caracteres.")
+        self.__numero = numero
+
+    def set_planta(self, planta):
+        if not isinstance(planta, int) or planta < 1:
+            raise ValueError("La planta debe ser un número entero mayor a 0.")
+        self.__planta = planta
 
     def set_situacion(self, situacion):
         if situacion not in ['DISPONIBLE', 'OCUPADA', 'EN MANTENIMIENTO']:
-            raise ValueError("Situación no válida")
-        self._situacion = situacion
-
-    def get_planta(self):
-        return self._planta
-
-    def set_planta(self, planta):
-        if planta not in ['1', '2', '3', '4', '5']:
-            raise ValueError("Planta no válida")
-        self._planta = planta
+            raise ValueError("Situación no válida.")
+        self.__situacion = situacion
