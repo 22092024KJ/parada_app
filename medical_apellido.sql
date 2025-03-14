@@ -1,6 +1,6 @@
--- Crear la base de datos si no existe
-CREATE DATABASE IF NOT EXISTS ieperez_bd;
-USE ieperez_bd;
+
+CREATE DATABASE IF NOT EXISTS iparada_bd;
+USE iparada_bd;
 
 -- Crear tabla Aula
 CREATE TABLE Aula (

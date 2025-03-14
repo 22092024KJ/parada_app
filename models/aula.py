@@ -42,3 +42,4 @@ class Aula(Base):
         if situacion not in ['DISPONIBLE', 'OCUPADA', 'EN MANTENIMIENTO']:
             raise ValueError("Situación no válida.")
         self.__situacion = situacion
+
